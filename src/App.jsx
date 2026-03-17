@@ -3,77 +3,87 @@ import { useState, useEffect } from "react";
 const COHORT = "2601-FTB-CT-WEB-PT"; 
 const API_URL = `https://fsa-crud-2aa9294fe819.herokuapp.com/api/2601-FTB-CT-WEB-PT/guests`;
 
+async function getAllGuests() {
+  try {
+    const response = await fetch(API_URL);
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getSingleGuest(id) {
+  try {
+    const response = await fetch(`${API_URL}/${id}`);
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function App() {
-  const [guests, setGuests] = useState([]); 
+  const [guests, setGuests] = useState([]);
   const [selectedGuestId, setSelectedGuestId] = useState(null);
   const [selectedGuest, setSelectedGuest] = useState(null);
 
   useEffect(() => {
-    async function fetchGuests() {
-      try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-        setGuests(result.data);
-      } catch (error) {
-        console.error("Error fetching guests:", error);
-      }
+    async function fetchData() {
+      const data = await getAllGuests();
+      setGuests(data || []);
     }
-    fetchGuests();
-  }, []); 
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    async function fetchSingleGuest() {
+    async function fetchData() {
       if (!selectedGuestId) {
         setSelectedGuest(null);
         return;
       }
-
-      try {
-        const response = await fetch(`${API_URL}/${selectedGuestId}`);
-        const result = await response.json();
-        setSelectedGuest(result.data);
-      } catch (error) {
-        console.error("Error fetching guest details:", error);
-      }
+      const data = await getSingleGuest(selectedGuestId);
+      setSelectedGuest(data);
     }
-    fetchSingleGuest();
-  }, [selectedGuestId]); 
+    fetchData();
+  }, [selectedGuestId]);
 
   return (
     <div className="App">
-      <h1>Guest List</h1>
-
       {selectedGuest ? (
         <div className="details-view">
-          <h2>Details for {selectedGuest.name}</h2>
-          <p><strong>Email:</strong> {selectedGuest.email}</p>
-          <p><strong>Phone:</strong> {selectedGuest.phone}</p>
-          <p><strong>Job:</strong> {selectedGuest.job || "N/A"}</p>
-          <p><strong>Bio:</strong> {selectedGuest.bio || "No bio available."}</p>
-          
-          <button onClick={() => setSelectedGuestId(null)}>Back to List</button>
+          <h2>{selectedGuest.name}</h2>
+          <p><b>Email:</b> {selectedGuest.email}</p>
+          <p><b>Phone:</b> {selectedGuest.phone}</p>
+          <p><b>Job:</b> {selectedGuest.job || "N/A"}</p>
+          <p><b>Bio:</b> {selectedGuest.bio || "N/A"}</p>
+          <button onClick={() => setSelectedGuestId(null)}>Back</button>
         </div>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div className="guest-list-box">
+          <h1 className="main-header">Guest List</h1>
+          
+          <div className="guest-header-row">
+            <div>Name</div>
+            <div>Email</div>
+            <div>Phone</div>
+          </div>
+
+          <div className="guest-list-container">
             {guests.map((guest) => (
-              <tr key={guest.id} onClick={() => setSelectedGuestId(guest.id)}>
-                <td>{guest.name}</td>
-                <td>{guest.email}</td>
-                <td>{guest.phone}</td>
-              </tr>
+              <div 
+                key={guest.id} 
+                className={`guest-row ${selectedGuestId === guest.id ? "selected" : ""}`}
+                onClick={() => setSelectedGuestId(guest.id)}
+              >
+                <div>{guest.name}</div>
+                <div>{guest.email}</div>
+                <div>{guest.phone}</div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       )}
     </div>
   );
 }
-

@@ -1,7 +1,67 @@
-tr.selected {
-  background-color: #fff9c4; 
+body {
+  margin: 0;
+  padding: 40px;
+  font-family: "Times New Roman", Times, serif;
+  display: flex;
+  justify-content: center;
 }
 
-tr {
-  cursor: pointer; 
+.App {
+  width: 100%;
+  max-width: 900px;
+}
+
+.guest-list-box {
+  border: 2px solid black;
+  background-color: white;
+}
+
+.main-header {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.guest-header-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.guest-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.guest-row div {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.guest-row:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.guest-row.selected {
+  background-color: #fff9c4 !important;
+}
+
+.guest-row:hover {
+  background-color: #e8e8e8;
+}
+
+.details-view {
+  border: 2px solid black;
+  padding: 30px;
+  text-align: center;
+}
+
+button {
+  margin-top: 20px;
+  padding: 5px 15px;
+  font-family: inherit;
+  cursor: pointer;
 }
