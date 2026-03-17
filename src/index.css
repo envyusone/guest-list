@@ -1,0 +1,7 @@
+tr.selected {
+  background-color: #fff9c4; 
+}
+
+tr {
+  cursor: pointer; 
+}
